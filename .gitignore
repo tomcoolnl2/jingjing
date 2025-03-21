@@ -1,5 +1,11 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+/apps/**/.env
+/apps/**/.env.local
+/apps/**/.env.development
+/apps/**/.env.test
+/apps/**/.env.production
+
 # compiled output
 dist
 tmp
@@ -46,3 +52,6 @@ Thumbs.db
 out
 
 test-output
+
+
+storybook-static
