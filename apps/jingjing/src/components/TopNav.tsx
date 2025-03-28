@@ -6,18 +6,18 @@ const TopNav = () => {
     <nav className="bg-gray-200 p-4 shadow-md mb-4">
       <ul className="flex justify-center space-x-4">
         <li>
-          <Link href="/">
-            <a className="text-blue-600 hover:text-blue-800">Home</a>
+          <Link href="/" className="text-blue-600 hover:text-blue-800">
+            <span>Home</span>
           </Link>
         </li>
         <li>
           <Link href="/login">
-            <a className="text-blue-600 hover:text-blue-800">Login</a>
+            <span className="text-blue-600 hover:text-blue-800">Login</span>
           </Link>
         </li>
         <li>
           <Link href="/register">
-            <a className="text-blue-600 hover:text-blue-800">Register</a>
+            <span className="text-blue-600 hover:text-blue-800">Register</span>
           </Link>
         </li>
       </ul>
