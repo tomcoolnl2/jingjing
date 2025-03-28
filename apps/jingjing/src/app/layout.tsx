@@ -1,3 +1,5 @@
+
+import 'bootstrap-material-design/dist/css/bootstrap-material-design.min.css';
 import './global.css';
 
 export const metadata = {

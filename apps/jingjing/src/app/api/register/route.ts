@@ -49,7 +49,6 @@ export async function POST(request: Request) {
     const { name, email, password } = await request.json();
     try {
         const user = await new User({ name, email, password: await bcrypt.hash(password, 10) });
-        console.log('user created', user);
         user.save();
         return NextResponse.json({ message: 'User created' }, { status: 200 });
     } catch (error) {
