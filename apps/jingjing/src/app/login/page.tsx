@@ -52,7 +52,6 @@ export default function LoginPage() {
                 <div className="col-lg-5 shadow bg-light p-4 rounded">
                     <h2 className="mb-4 text-center">Login</h2>
                     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">    
-                        
                         <input type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' className="form-control mb-4" required />
                         <input type='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Password' className="form-control mb-4" required />
                         <button type='submit' className="btn btn-primary btn-raised w-100" disabled={loading || !email || !password}>
