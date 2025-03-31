@@ -50,7 +50,7 @@ export default function LoginPage() {
             <h1 className="text-4xl font-bold text-center text-blue-600">Login</h1>
             <div className="row d=flex justify-content-center vh-100 align-items-center">
                 <div className="col-lg-5 shadow bg-light p-4 rounded">
-                    <h2 className="mb-4 text-center">Register</h2>
+                    <h2 className="mb-4 text-center">Login</h2>
                     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">    
                         
                         <input type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' className="form-control mb-4" required />
@@ -62,6 +62,12 @@ export default function LoginPage() {
                             <a href="/docs" className="text-blue-600" target='_blank'>API Docs</a>
                         </p>  
                     </form>
+                    <button type='button' className="btn btn-danger btn-raised w-100 mt-2" onClick={() => signIn("google", { callbackUrl })}>
+                        {loading ? "Loading..." : "Login with Google"}
+                    </button>
+                    <button type='button' className="btn btn-secondary btn-raised w-100 mt-2" onClick={() => router.push('/register')}>
+                        Register
+                    </button>
                 </div>
             </div>
         </main>
