@@ -1,4 +1,7 @@
-export default {
+import { pathsToModuleNameMapper, JestConfigWithTsJest } from "ts-jest";
+import { compilerOptions } from "./tsconfig.json";
+
+const jestConfig: JestConfigWithTsJest = {
   displayName: 'jingjing',
   preset: '../../jest.preset.js',
   transform: {
@@ -7,4 +10,8 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: 'test-output/jest/coverage',
+  moduleDirectories: ["node_modules", "<rootDir>"],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
 };
+
+export default jestConfig;

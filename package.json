@@ -2,7 +2,9 @@
   "name": "@jingjing/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "test": "nx test jingjing"
+  },
   "private": true,
   "dependencies": {
     "bcrypt": "5.1.1",
@@ -33,6 +35,7 @@
     "@swc/core": "1.5.7",
     "@swc/helpers": "0.5.11",
     "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/jest": "29.5.12",

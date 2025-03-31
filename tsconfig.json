@@ -4,7 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/jingjing-e2e"
+      "path": "./apps/jingjing-e2e",
     },
     {
       "path": "./apps/jingjing"
