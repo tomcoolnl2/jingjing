@@ -30,7 +30,7 @@ const TopNav = () => {
         {status === 'authenticated' && (
           <li>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/login' })}
               className="text-blue-600 hover:text-blue-800"
             >
               Sign Out
