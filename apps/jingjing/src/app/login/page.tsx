@@ -1,12 +1,21 @@
 "use client"
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 
 export default function LoginPage() {
+    
     const router = useRouter();
+    
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    const error = searchParams.get("error");
+    const errorMessage = error ? decodeURIComponent(error) : null;
+    if (errorMessage) {
+        console.error("Error during login:", errorMessage);
+    }
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -27,7 +36,7 @@ export default function LoginPage() {
                 throw new Error(result.error);
             } else {
                 console.log("Login successful");
-                router.push("/");
+                router.push(callbackUrl);
             }
         } catch (error) {
             console.error(error);
