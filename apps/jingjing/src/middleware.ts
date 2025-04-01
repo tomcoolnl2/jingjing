@@ -13,15 +13,26 @@ export const config = {
     ],
 };
 
+interface UserToken {
+    user?: {
+        role?: string;
+    };
+}
+
 export default withAuth(
     async function middleware(req) {
         const url = req.nextUrl.pathname;
-        const userRole = req.nextauth.token?.role;
+
+        const token = req.nextauth.token as UserToken;
+        const userRole = token.user?.role;
         const isAdmin = userRole === 'admin';
 
         if (url?.includes('/admin') && !isAdmin) {
             return NextResponse.redirect(new URL('/', req.url));
         }
+
+        // Default response if no conditions are met
+        return NextResponse.next();
     },
     {
         callbacks: {

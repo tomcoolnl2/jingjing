@@ -27,7 +27,7 @@ export const TopNavigation = () => {
                     />
                 ) : null}
                 {/* {data?.user?.role === 'admin' && <TopNavigationItem href="/admin/users" label="Users" />} */}
-                {status === 'authenticated' && <TopNavigationItem href="/profile" label="Profile" />}
+                {/* {status === 'authenticated' && <TopNavigationItem href="/profile" label="Profile" />} */}
                 {loading && <TopNavigationItem href="#" label="Loading..." />}
                 {status === 'authenticated' && (
                     <TopNavigationItem
