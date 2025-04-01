@@ -1,5 +1,3 @@
-
-
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
@@ -48,12 +46,18 @@ export async function POST(request: Request) {
     await dbConnect();
     const { name, email, password } = await request.json();
     try {
-        const user = await new User({ name, email, password: await bcrypt.hash(password, 10) });
+        const user = await new User({
+            name,
+            email,
+            password: await bcrypt.hash(password, 10),
+        });
         user.save();
         return NextResponse.json({ message: 'User created' }, { status: 200 });
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+        return NextResponse.json(
+            { error: (error as Error).message },
+            { status: 500 }
+        );
     }
 }
-

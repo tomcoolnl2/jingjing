@@ -11,16 +11,16 @@
 // ***********************************************
 
 declare global {
-  namespace Cypress {
-    interface Chainable<Subject> {
-      login(email: string, password: string): void;
+    namespace Cypress {
+        interface Chainable<Subject> {
+            login(email: string, password: string): void;
+        }
     }
-  }
 }
 
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
-  console.log('Custom command example: Login', email, password);
+    console.log('Custom command example: Login', email, password);
 });
 //
 // -- This is a child command --

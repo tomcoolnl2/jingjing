@@ -1,13 +1,13 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
-  "files": [],
-  "references": [
-    {
-      "path": "./apps/jingjing-e2e",
-    },
-    {
-      "path": "./apps/jingjing"
-    }
-  ]
+    "extends": "./tsconfig.base.json",
+    "compileOnSave": false,
+    "files": [],
+    "references": [
+        {
+            "path": "./apps/jingjing-e2e"
+        },
+        {
+            "path": "./apps/jingjing"
+        }
+    ]
 }

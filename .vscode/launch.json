@@ -14,14 +14,10 @@
             "request": "launch",
             "name": "Debug Jest Tests",
             "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
-            "args": [
-              "--runInBand",
-              "--config",
-              "apps/jingjing/jest.config.ts"
-            ],
+            "args": ["--runInBand", "--config", "apps/jingjing/jest.config.ts"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
-          }
+        }
     ]
 }

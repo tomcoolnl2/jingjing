@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-
+import mongoose from 'mongoose';
 
 const dbConnect = async () => {
     if (mongoose.connection.readyState >= 1) {
@@ -7,10 +6,9 @@ const dbConnect = async () => {
     }
     const dbUrl = process.env.DATABASE_URL;
     if (!dbUrl) {
-        throw new Error("DATABASE_URL is not defined");
+        throw new Error('DATABASE_URL is not defined');
     }
-    return mongoose.connect(dbUrl, {
-    });
-}
+    return mongoose.connect(dbUrl, {});
+};
 
 export default dbConnect;

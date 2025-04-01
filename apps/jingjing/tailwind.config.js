@@ -11,17 +11,17 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
-    '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
-    //     ...createGlobPatternsForDependencies(__dirname)
-  ],
-  theme: {
-    extend: {
-      gridTemplateRows: {
-        'layout': 'auto 1fr auto auto', // Define the layout for header, main content, aside, and footer
-      },
+    content: [
+        './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
+        '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
+        //     ...createGlobPatternsForDependencies(__dirname)
+    ],
+    theme: {
+        extend: {
+            gridTemplateRows: {
+                layout: 'auto 1fr auto auto', // Define the layout for header, main content, aside, and footer
+            },
+        },
     },
-  },
-  plugins: [],
+    plugins: [],
 };

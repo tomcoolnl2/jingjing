@@ -1,10 +1,9 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleCredentialsProvider from "next-auth/providers/google";
-import  User from '@/models/user';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleCredentialsProvider from 'next-auth/providers/google';
+import User from '@/models/user';
 import bcrypt from 'bcrypt';
 import dbConnect from '@/utils/dbConnect';
-import { AuthOptions, RequestInternal } from "next-auth";
-
+import { AuthOptions, RequestInternal } from 'next-auth';
 
 export const authOptions: AuthOptions = {
     session: {
@@ -13,13 +12,13 @@ export const authOptions: AuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
         GoogleCredentialsProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID || "", 
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+            clientId: process.env.GOOGLE_CLIENT_ID || '',
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
             authorization: {
                 params: {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
+                    prompt: 'consent',
+                    access_type: 'offline',
+                    response_type: 'code',
                 },
             },
             profile(profile) {
@@ -27,17 +26,33 @@ export const authOptions: AuthOptions = {
                     id: profile.sub,
                     name: profile.name,
                     email: profile.email,
-                }
-            }
+                };
+            },
         }),
         CredentialsProvider({
-            name: "credentials",
+            name: 'credentials',
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password" },
-                email: { label: "Email", type: "text", placeholder: "john@doe.com" }
+                username: {
+                    label: 'Username',
+                    type: 'text',
+                    placeholder: 'jsmith',
+                },
+                password: { label: 'Password', type: 'password' },
+                email: {
+                    label: 'Email',
+                    type: 'text',
+                    placeholder: 'john@doe.com',
+                },
             },
-            async authorize(credentials: Record<"username" | "password" | "email", string> | undefined, req: Pick<RequestInternal, "body" | "query" | "headers" | "method">) {
+            async authorize(
+                credentials:
+                    | Record<'username' | 'password' | 'email', string>
+                    | undefined,
+                req: Pick<
+                    RequestInternal,
+                    'body' | 'query' | 'headers' | 'method'
+                >
+            ) {
                 if (!credentials) {
                     throw new Error('Missing credentials');
                 }
@@ -47,17 +62,20 @@ export const authOptions: AuthOptions = {
                 if (!user) {
                     throw new Error('No user found');
                 }
-                const isPasswordmatched = await bcrypt.compare(password, user.password);
+                const isPasswordmatched = await bcrypt.compare(
+                    password,
+                    user.password
+                );
                 if (!isPasswordmatched) {
                     throw new Error('Invalid password');
                 }
                 return user;
-            }
-        })
+            },
+        }),
     ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            if (account?.provider === "google") {
+            if (account?.provider === 'google') {
                 const { id, name, email } = user;
                 await dbConnect();
                 const existingUser = await User.findOne({ email });
@@ -77,15 +95,19 @@ export const authOptions: AuthOptions = {
             return token;
         },
         async session({ session, token }) {
-            session.user = token.user as { name?: string | null; email?: string | null; image?: string | null };
+            session.user = token.user as {
+                name?: string | null;
+                email?: string | null;
+                image?: string | null;
+            };
             return session;
-        }
+        },
     },
     pages: {
-        signIn: '/login',  
+        signIn: '/login',
         signOut: '/login',
         error: '/login',
         verifyRequest: '/login',
-        newUser: '/register'
+        newUser: '/register',
     },
 };
