@@ -45,16 +45,11 @@ export default function LoginPage() {
 
     return (
         <main className="container">
-            <h1 className="text-4xl font-bold text-center text-blue-600">
-                Login
-            </h1>
+            <h1 className="text-4xl font-bold text-center text-blue-600">Login</h1>
             <div className="row d=flex justify-content-center vh-100 align-items-center">
                 <div className="col-lg-5 shadow bg-light p-4 rounded">
                     <h2 className="mb-4 text-center">Login</h2>
-                    <form
-                        onSubmit={handleSubmit}
-                        className="max-w-md mx-auto mt-8"
-                    >
+                    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">
                         <input
                             type="email"
                             value={email}
@@ -79,11 +74,7 @@ export default function LoginPage() {
                             {loading ? 'Loading...' : 'Login'}
                         </button>
                         <p className="mt-4 text-center">
-                            <a
-                                href="/docs"
-                                className="text-blue-600"
-                                target="_blank"
-                            >
+                            <a href="/docs" className="text-blue-600" target="_blank">
                                 API Docs
                             </a>
                         </p>

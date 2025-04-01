@@ -45,13 +45,8 @@ export const authOptions: AuthOptions = {
                 },
             },
             async authorize(
-                credentials:
-                    | Record<'username' | 'password' | 'email', string>
-                    | undefined,
-                req: Pick<
-                    RequestInternal,
-                    'body' | 'query' | 'headers' | 'method'
-                >
+                credentials: Record<'username' | 'password' | 'email', string> | undefined,
+                req: Pick<RequestInternal, 'body' | 'query' | 'headers' | 'method'>,
             ) {
                 if (!credentials) {
                     throw new Error('Missing credentials');
@@ -62,10 +57,7 @@ export const authOptions: AuthOptions = {
                 if (!user) {
                     throw new Error('No user found');
                 }
-                const isPasswordmatched = await bcrypt.compare(
-                    password,
-                    user.password
-                );
+                const isPasswordmatched = await bcrypt.compare(password, user.password);
                 if (!isPasswordmatched) {
                     throw new Error('Invalid password');
                 }

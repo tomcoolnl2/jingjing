@@ -15,16 +15,13 @@ export default function RegisterPage() {
         try {
             setLoading(true);
 
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/register`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name, email, password }),
-                }
-            );
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
 
             const data = await response.json();
 
@@ -46,16 +43,11 @@ export default function RegisterPage() {
 
     return (
         <main className="container">
-            <h1 className="text-4xl font-bold text-center text-blue-600">
-                Register
-            </h1>
+            <h1 className="text-4xl font-bold text-center text-blue-600">Register</h1>
             <div className="row d=flex justify-content-center vh-100 align-items-center">
                 <div className="col-lg-5 shadow bg-light p-4 rounded">
                     <h2 className="mb-4 text-center">Register</h2>
-                    <form
-                        onSubmit={handleSubmit}
-                        className="max-w-md mx-auto mt-8"
-                    >
+                    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8">
                         <input
                             type="text"
                             value={name}
@@ -94,11 +86,7 @@ export default function RegisterPage() {
                             </a>
                         </p>
                         <p className="mt-4 text-center">
-                            <a
-                                href="/docs"
-                                className="text-blue-600"
-                                target="_blank"
-                            >
+                            <a href="/docs" className="text-blue-600" target="_blank">
                                 API Docs
                             </a>
                         </p>
