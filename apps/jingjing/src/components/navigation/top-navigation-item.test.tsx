@@ -15,34 +15,30 @@ describe('TopNavigationItem', () => {
     });
 
     it('renders the link with the correct href and label', () => {
-        render(<div>Test</div>);
+        render(<TopNavigationItem {...defaultProps} />);
+        const linkElement = screen.getByRole('link', { name: /test label/i });
+
+        expect(linkElement).toBeInTheDocument();
+        expect(linkElement).toHaveAttribute('href', '/test');
     });
 
-    // it('renders the link with the correct href and label', () => {
-    //     render(<TopNavigationItem {...defaultProps} />);
-    //     const linkElement = screen.getByRole('link', { name: /test label/i });
+    it('calls the onClick handler when clicked', () => {
+        render(<TopNavigationItem {...defaultProps} />);
+        const linkElement = screen.getByRole('link', { name: /test label/i });
 
-    //     expect(linkElement).toBeInTheDocument();
-    //     expect(linkElement).toHaveAttribute('href', '/test');
-    // });
+        fireEvent.click(linkElement);
+        expect(defaultProps.onClick).toHaveBeenCalledTimes(1);
+    });
 
-    // it('calls the onClick handler when clicked', () => {
-    //     render(<TopNavigationItem {...defaultProps} />);
-    //     const linkElement = screen.getByRole('link', { name: /test label/i });
+    it('applies the correct CSS classes', () => {
+        render(<TopNavigationItem {...defaultProps} />);
+        const linkElement = screen.getByRole('link', { name: /test label/i });
 
-    //     fireEvent.click(linkElement);
-    //     expect(defaultProps.onClick).toHaveBeenCalledTimes(1);
-    // });
+        expect(linkElement).toHaveClass('text-blue-600 hover:text-blue-800');
+    });
 
-    // it('applies the correct CSS classes', () => {
-    //     render(<TopNavigationItem {...defaultProps} />);
-    //     const linkElement = screen.getByRole('link', { name: /test label/i });
-
-    //     expect(linkElement).toHaveClass('text-blue-600 hover:text-blue-800');
-    // });
-
-    // it('renders without crashing when onClick is not provided', () => {
-    //     const { container } = render(<TopNavigationItem href="/test" label="Test Label" />);
-    //     expect(container).toBeInTheDocument();
-    // });
+    it('renders without crashing when onClick is not provided', () => {
+        const { container } = render(<TopNavigationItem href="/test" label="Test Label" />);
+        expect(container).toBeInTheDocument();
+    });
 });

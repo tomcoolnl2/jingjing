@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
-// import { hash, compare } from 'bcryptjs';
-// import { sign } from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema(
     {

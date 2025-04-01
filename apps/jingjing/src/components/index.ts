@@ -1,1 +1,2 @@
-export { TopNavigation } from './page/top-navigation';
+export { AdminNavigation } from './navigation/admin-navigation';
+export { TopNavigation } from './navigation/top-navigation';
