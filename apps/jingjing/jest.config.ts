@@ -33,4 +33,5 @@ export default async () =>
         ...(await config()),
         coverageProvider: 'v8',
         verbose: process.env.CI ? false : true,
+        globalTeardown: './jest.globalTeardown.ts',
     }) as Config;
