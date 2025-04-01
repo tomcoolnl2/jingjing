@@ -5,8 +5,17 @@ import User from '@/models/user';
 
 /**
  * @swagger
+ * tags:
+ *   - name: Authentication
+ *     description: Endpoints for user authentication
+ */
+
+/**
+ * @swagger
  * /api/register:
  *   post:
+ *     tags:
+ *       - Authentication
  *     summary: Register a new user
  *     description: Creates a new user with the provided name, email, and password.
  *     requestBody:

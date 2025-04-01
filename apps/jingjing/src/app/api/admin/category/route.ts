@@ -1,14 +1,26 @@
+import slugify from 'slugify';
+import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/utils/authOptions';
 import dbConnect from '@/utils/dbConnect';
 import Category from '@/models/category';
-import slugify from 'slugify';
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Categories
+ *     description: Endpoints for managing categories in the admin panel
+ */
 
 /**
  * @swagger
  * /api/admin/category:
  *   post:
+ *     tags:
+ *       - Categories
  *     summary: Create a new category
- *     description: Creates a new category with the provided name and description.
+ *     description: Creates a new category with the provided name and description. Only accessible to admin users.
  *     requestBody:
  *       required: true
  *       content:
@@ -30,6 +42,26 @@ import slugify from 'slugify';
  *               properties:
  *                 message:
  *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Forbidden
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -39,19 +71,31 @@ import slugify from 'slugify';
  *               properties:
  *                 error:
  *                   type: string
- **/
+ */
 export async function POST(req: Request) {
-    await dbConnect();
-    const { name, description } = await req.json();
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
+    }
+
+    const userRole = session.user.role;
+    if (userRole !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
+    }
 
     try {
+        await dbConnect();
+        const { name, description } = await req.json();
         const category = await Category.create({ name, description, slug: slugify(name) });
         if (!category) {
             throw new Error('Category creation failed');
         }
-        return NextResponse.json(category, { status: 201 });
+        return NextResponse.json(category, { status: StatusCodes.CREATED });
     } catch (error) {
-        return NextResponse.json({ error: (error as Error).message || 'Failed to create category' }, { status: 500 });
+        return NextResponse.json(
+            { error: (error as Error).message || 'Failed to create category' },
+            { status: StatusCodes.INTERNAL_SERVER_ERROR },
+        );
     }
 }
 
@@ -59,6 +103,8 @@ export async function POST(req: Request) {
  * @swagger
  * /api/admin/category:
  *   get:
+ *     tags:
+ *       - Categories
  *     summary: Get all categories
  *     description: Returns a list of all categories.
  *     responses:
@@ -92,13 +138,16 @@ export async function POST(req: Request) {
  *               properties:
  *                 error:
  *                   type: string
- **/
+ */
 export async function GET(req: Request) {
     await dbConnect();
     try {
         const categories = await Category.find({}).sort({ createdAt: -1 });
-        return NextResponse.json(categories, { status: 200 });
+        return NextResponse.json(categories, { status: StatusCodes.OK });
     } catch (error) {
-        return NextResponse.json({ error: (error as Error).message || 'Failed to fetch categories' }, { status: 500 });
+        return NextResponse.json(
+            { error: (error as Error).message || 'Failed to fetch categories' },
+            { status: StatusCodes.INTERNAL_SERVER_ERROR },
+        );
     }
 }
