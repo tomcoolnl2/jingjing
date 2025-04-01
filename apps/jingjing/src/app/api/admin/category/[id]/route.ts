@@ -39,15 +39,6 @@ type Context = {
  *                   type: string
  *                 description:
  *                   type: string
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
  *       404:
  *         description: Category not found
  *         content:
@@ -58,13 +49,22 @@ type Context = {
  *                 error:
  *                   type: string
  *                   example: Category not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
  */
 export async function GET(req: Request, context: Context) {
     try {
         await dbConnect();
         const category = await Category.findById(context.params.id);
         if (!category) {
-            throw new Error('Category not found');
+            return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
         return NextResponse.json(category, { status: StatusCodes.OK });
     } catch (error) {

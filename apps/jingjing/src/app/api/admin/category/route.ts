@@ -62,6 +62,16 @@ import Category from '@/models/category';
  *                 error:
  *                   type: string
  *                   example: Forbidden
+ *       404:
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Category not found
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -88,7 +98,7 @@ export async function POST(req: Request) {
         const { name, description } = await req.json();
         const category = await Category.create({ name, description, slug: slugify(name) });
         if (!category) {
-            throw new Error('Category creation failed');
+            return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
         return NextResponse.json(category, { status: StatusCodes.CREATED });
     } catch (error) {
