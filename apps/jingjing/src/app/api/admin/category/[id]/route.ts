@@ -159,7 +159,10 @@ export async function DELETE(req: Request, context: Context) {
             return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
 
-        return NextResponse.json({ message: 'Category deleted successfully' }, { status: StatusCodes.OK });
+        return NextResponse.json(
+            { id: context.params.id, message: 'Category deleted successfully' },
+            { status: StatusCodes.OK },
+        );
     } catch (error) {
         return NextResponse.json(
             { error: (error as Error).message || 'Failed to delete category' },

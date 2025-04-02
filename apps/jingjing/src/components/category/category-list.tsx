@@ -1,10 +1,12 @@
-import { Category } from '@/models/category';
+import { Category, CategoryEdit } from '@/models/category';
 
 export interface Props {
     categories: Category[];
+    handleSetEditingCategory: (category: CategoryEdit) => void;
+    handleDeleteCategory: (id: string) => Promise<void>;
 }
 
-export const CategoryList: React.FC<Props> = ({ categories }) => {
+export const CategoryList: React.FC<Props> = ({ categories, handleSetEditingCategory, handleDeleteCategory }) => {
     return (
         <div className="">
             <h2>Categories</h2>
@@ -14,12 +16,12 @@ export const CategoryList: React.FC<Props> = ({ categories }) => {
                         <div className="card-body">
                             <h5 className="card-title">{category.name}</h5>
                             <p className="card-text">{category.description}</p>
-                            <a href="#" className="btn btn-primary">
+                            <button onClick={() => handleSetEditingCategory(category)} className="btn btn-primary">
                                 Edit
-                            </a>
-                            <a href="#" className="btn btn-danger">
+                            </button>
+                            <button onClick={() => handleDeleteCategory(category.id)} className="btn btn-danger">
                                 Delete
-                            </a>
+                            </button>
                         </div>
                     </li>
                 ))}

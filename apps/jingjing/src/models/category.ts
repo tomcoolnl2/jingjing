@@ -1,22 +1,41 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
-export type UpsetCategory = 'create' | 'update' | 'delete';
+export enum CategoryUpsertType {
+    CREATE = 'create',
+    EDIT = 'edit',
+}
 
-export interface CategoryBase {
-    id: string;
+export interface CategoryCreate {
     name: string;
     description: string;
     slug?: string;
 }
 
-export interface Category extends CategoryBase {
-    _id: mongoose.Types.ObjectId;
+export interface CategoryEdit extends CategoryCreate {
+    id: string;
+}
+
+export type CategoryUpsert = CategoryCreate | CategoryEdit;
+
+export interface CategoryResponse extends mongoose.Document {
+    name: string;
+    description: string;
+    slug: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const categoriesategorySchema = new mongoose.Schema(
+export interface Category {
+    id: string;
+    name: string;
+    description: string;
+    slug: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const categorySchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -33,6 +52,6 @@ const categoriesategorySchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-categoriesategorySchema.plugin(uniqueValidator);
+categorySchema.plugin(uniqueValidator);
 
-export default mongoose.models.Category || mongoose.model('Category', categoriesategorySchema);
+export default mongoose.models?.Category || mongoose.model('Category', categorySchema);

@@ -1,64 +1,87 @@
 'use client';
 import React from 'react';
-import { Category, CategoryBase } from '@/models/category';
-import CategoriesApi from '@/utils/api/api-categories';
+import { CategoryEdit, CategoryUpsert, CategoryUpsertType } from '@/models/category';
+import { CategoriesApi } from '@/utils/api/api-categories';
 
 interface CreateCategoryEditorProps {
-    type: 'create';
+    type: CategoryUpsertType.CREATE;
 }
 
 interface EditCategoryEditorProps {
-    type: 'edit';
-    category: Category;
+    type: CategoryUpsertType.EDIT;
+    category: CategoryEdit;
 }
 
-export type CategoryEditorProps = CreateCategoryEditorProps | EditCategoryEditorProps;
+export type CategoryEditorProps = (CreateCategoryEditorProps | EditCategoryEditorProps) & {
+    handleUpsertCategorySubmit: () => Promise<void>;
+    handleResetEditingCategory: () => void;
+};
+
+const placeholderCategory: CategoryUpsert = {
+    name: '',
+    description: '',
+};
 
 export const CategoryEditor: React.FC<CategoryEditorProps> = (props) => {
     const { type } = props;
-    const category = type === 'edit' ? props.category : { name: '', description: '', slug: '' };
-
     const { current: categoriesApi } = React.useRef(CategoriesApi.getInstance());
 
-    const [newCategory, dispatch] = React.useReducer((state: Omit<CategoryBase, 'id'>, action: any) => {
-        switch (action.type) {
-            case 'SET_NAME':
-                return { ...state, name: action.payload };
-            case 'SET_DESCRIPTION':
-                return { ...state, description: action.payload };
-            default:
-                return state;
-        }
-    }, category);
+    const category = React.useMemo(
+        () => (type === CategoryUpsertType.EDIT ? props.category : placeholderCategory),
+        [type],
+    );
+    console.log('CategoryEditor', { type, category });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [upsertCategory, dispatch] = React.useReducer(
+        (state: CategoryUpsert, action: { type: string; payload: any }) => {
+            switch (action.type) {
+                case 'SET_NAME':
+                    return { ...state, name: action.payload };
+                case 'SET_DESCRIPTION':
+                    return { ...state, description: action.payload };
+                default:
+                    return state;
+            }
+        },
+        category,
+    );
+
+    React.useEffect(() => {
+        dispatch({ type: 'SET_NAME', payload: category.name });
+        dispatch({ type: 'SET_DESCRIPTION', payload: category.description });
+    }, [category]);
+
+    const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         dispatch({ type: `SET_${name.toUpperCase()}`, payload: value });
-    };
+    }, []);
 
     const handleSubmit = React.useCallback(
         async (event: React.FormEvent) => {
             event.preventDefault();
             switch (type) {
-                case 'create':
-                    await categoriesApi.createCategory(newCategory);
+                case CategoryUpsertType.CREATE:
+                    await categoriesApi.createCategory(upsertCategory);
                     break;
-                // case 'edit':
-                //     await categoriesApi.updateCategory({newCategory);
-                //     break;
+                case CategoryUpsertType.EDIT:
+                    await categoriesApi.updateCategory({ ...category, ...upsertCategory });
+                    break;
             }
+            await props.handleUpsertCategorySubmit();
         },
-        [newCategory, type],
+        [category, upsertCategory, type],
     );
+
+    const text = React.useMemo(() => (type === CategoryUpsertType.CREATE ? 'Create' : 'Update'), [type]);
 
     return (
         <div>
-            <h2>{`${type === 'create' ? 'Create a' : 'Update'} Category`}</h2>
+            <h2>{`${text} Category`}</h2>
             <form className="mb-4" onSubmit={handleSubmit} autoComplete="off">
                 <input
                     type="text"
                     name="name"
-                    value={category.name}
+                    value={upsertCategory.name}
                     onChange={handleChange}
                     placeholder="Category Name"
                     className="form-control mb-2"
@@ -66,14 +89,23 @@ export const CategoryEditor: React.FC<CategoryEditorProps> = (props) => {
                 <input
                     type="text"
                     name="description"
-                    value={category.description}
+                    value={upsertCategory.description}
                     onChange={handleChange}
                     placeholder="Category Description"
                     className="form-control mb-2"
                 />
                 <button type="submit" className="btn btn-primary btn-raised w-100">
-                    {`${type === 'create' ? 'Create' : 'Update'} Category`}
+                    {text}
                 </button>
+                {type === CategoryUpsertType.EDIT ? (
+                    <button
+                        type="button"
+                        className="btn btn-danger btn-raised w-100 mt-2"
+                        onClick={props.handleResetEditingCategory}
+                    >
+                        Cancel
+                    </button>
+                ) : null}
             </form>
         </div>
     );
