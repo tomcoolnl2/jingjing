@@ -84,13 +84,17 @@ export const authOptions: AuthOptions = {
             existingUser.resetCode = undefined;
             existingUser.resetCodeExpires = undefined;
             token.user = existingUser;
+            token.exp = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour
+            console.log('JWT Callback - Token after update:', token);
             return token;
         },
         async session({ session, token }) {
-            session.user = token.user as {
-                name?: string | null;
-                email?: string | null;
-                image?: string | null;
+            session.user = {
+                id: (token.user as { id: string; name: string; email: string; image?: string; role?: string }).id,
+                name: (token.user as { id: string; name: string; email: string; image?: string; role?: string }).name,
+                email: (token.user as { id: string; name: string; email: string; image?: string; role?: string }).email,
+                role: (token.user as { id: string; name: string; email: string; image?: string; role?: string }).role,
+                image: (token.user as { id: string; name: string; email: string; image?: string; role?: string }).image,
             };
             return session;
         },

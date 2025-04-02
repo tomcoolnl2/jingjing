@@ -83,24 +83,27 @@ import Category from '@/models/category';
  *                   type: string
  */
 export async function POST(req: Request) {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
-    }
-
-    const userRole = session.user.role;
-    if (userRole !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
-    }
-
     try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
+        }
+
+        const userRole = session.user.role;
+        if (userRole !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
+        }
+
         await dbConnect();
+
         const { name, description } = await req.json();
         const category = await Category.create({ name, description, slug: slugify(name) });
         if (!category) {
             return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
+
         return NextResponse.json(category, { status: StatusCodes.CREATED });
+        //
     } catch (error) {
         return NextResponse.json(
             { error: (error as Error).message || 'Failed to create category' },
@@ -150,9 +153,10 @@ export async function POST(req: Request) {
  *                   type: string
  */
 export async function GET(req: Request) {
-    await dbConnect();
     try {
+        await dbConnect();
         const categories = await Category.find({}).sort({ createdAt: -1 });
+        console.log(categories);
         return NextResponse.json(categories, { status: StatusCodes.OK });
     } catch (error) {
         return NextResponse.json(

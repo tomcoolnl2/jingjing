@@ -2,15 +2,7 @@ import withAuth from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
 export const config = {
-    matcher: [
-        '/dashboard/:path*',
-        '/profile/:path*',
-        '/admin/:path*',
-        '/user/:path*',
-        '/api/auth/:path*',
-        '/api/admin/:path*',
-        '/api/user/:path*',
-    ],
+    matcher: ['/dashboard/:path*', '/api/user/:path*'],
 };
 
 interface UserToken {
@@ -22,16 +14,13 @@ interface UserToken {
 export default withAuth(
     async function middleware(req) {
         const url = req.nextUrl.pathname;
-
         const token = req.nextauth.token as UserToken;
-        const userRole = token.user?.role;
-        const isAdmin = userRole === 'admin';
+        const isAdmin = token.user?.role === 'admin';
 
-        if (url?.includes('/admin') && !isAdmin) {
-            return NextResponse.redirect(new URL('/', req.url));
+        if (url.includes('/admin') && !isAdmin) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 }); // TODO
         }
 
-        // Default response if no conditions are met
         return NextResponse.next();
     },
     {

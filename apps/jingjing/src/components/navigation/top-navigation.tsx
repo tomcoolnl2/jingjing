@@ -14,7 +14,7 @@ declare module 'next-auth' {
 export const TopNavigation = () => {
     const { data, status } = useSession();
     const loading = status === 'loading';
-    console.log({ data, status, loading });
+    console.log('TopNavigation', { data, status, loading });
 
     return (
         <nav className="bg-gray-200 p-4 shadow-md mb-4">

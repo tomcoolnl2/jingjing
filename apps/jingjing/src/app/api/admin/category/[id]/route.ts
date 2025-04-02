@@ -141,22 +141,24 @@ export async function GET(req: Request, context: Context) {
  *                   type: string
  */
 export async function DELETE(req: Request, context: Context) {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
-    }
-
-    const userRole = session.user.role;
-    if (userRole !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
-    }
-
     try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
+        }
+
+        const userRole = session.user.role;
+        if (userRole !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
+        }
+
         await dbConnect();
+
         const category = await Category.findByIdAndDelete(context.params.id);
         if (!category) {
             return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
+
         return NextResponse.json({ message: 'Category deleted successfully' }, { status: StatusCodes.OK });
     } catch (error) {
         return NextResponse.json(
@@ -181,7 +183,18 @@ export async function DELETE(req: Request, context: Context) {
  *         description: The ID of the category to update.
  *         schema:
  *           type: string
- *    responses:
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
  *       200:
  *         description: Category updated successfully
  *         content:
@@ -232,28 +245,32 @@ export async function DELETE(req: Request, context: Context) {
  *                   type: string
  */
 export async function PUT(req: Request, context: Context) {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
-    }
-
-    const userRole = session.user.role;
-    if (userRole !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
-    }
-
     try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
+        }
+
+        const userRole = session.user.role;
+        if (userRole !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
+        }
+
         await dbConnect();
+
         const { name, description } = await req.json();
         const category = await Category.findByIdAndUpdate(
             context.params.id,
             { name, description, slug: slugify(name) },
             { new: true },
         );
+
         if (!category) {
             return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
+
         return NextResponse.json(category, { status: StatusCodes.OK });
+        //
     } catch (error) {
         return NextResponse.json(
             { error: (error as Error).message || 'Failed to update category' },
@@ -328,18 +345,19 @@ export async function PUT(req: Request, context: Context) {
  *                   type: string
  */
 export async function PATCH(req: Request, context: Context) {
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
-    }
-
-    const userRole = session.user.role;
-    if (userRole !== 'admin') {
-        return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
-    }
-
     try {
+        const session = await getServerSession(authOptions);
+        if (!session || !session.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: StatusCodes.UNAUTHORIZED });
+        }
+
+        const userRole = session.user.role;
+        if (userRole !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden' }, { status: StatusCodes.FORBIDDEN });
+        }
+
         await dbConnect();
+
         const { name, description } = await req.json();
         const category = await Category.findByIdAndUpdate(
             context.params.id,
@@ -349,7 +367,9 @@ export async function PATCH(req: Request, context: Context) {
         if (!category) {
             return NextResponse.json({ error: 'Category not found' }, { status: StatusCodes.NOT_FOUND });
         }
+
         return NextResponse.json(category, { status: StatusCodes.OK });
+        //
     } catch (error) {
         return NextResponse.json(
             { error: (error as Error).message || 'Failed to update category' },
